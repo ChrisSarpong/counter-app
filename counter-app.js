@@ -20,6 +20,7 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
 
   constructor() {
     super();
+    this.count = 0;
     this.title = "";
     this.t = this.t || {};
     this.t = {
@@ -40,6 +41,7 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
     return {
       ...super.properties,
       title: { type: String },
+      count: { type: Number, reflect: true },
     };
   }
 
@@ -53,6 +55,12 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
         background-color: var(--ddd-theme-accent);
         font-family: var(--ddd-font-navigation);
       }
+      :host([count="18"]) {
+        color: var(--ddd-theme-secondary);
+      }
+      :host([count="21"]) {
+        color: var(--ddd-theme-secondary);
+      }
       .wrapper {
         margin: var(--ddd-spacing-2);
         padding: var(--ddd-spacing-4);
@@ -60,16 +68,44 @@ export class CounterApp extends DDDSuper(I18NMixin(LitElement)) {
       h3 span {
         font-size: var(--counter-app-label-font-size, var(--ddd-font-size-s));
       }
+      .counter {
+        font-size: var(--counter-app-counter-font-size, var(--ddd-font-size-xxl));
+        text-align: center;
+      }
+      .buttons {
+        display: flex;
+        justify-content: center;
+        gap: var(--ddd-spacing-2);
+      }
+      
     `];
   }
-
+ /*  update(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has("count")) {
+      console.log("count changed to ", this.count);
+    }
+    }*/
   // Lit render the HTML
   render() {
     return html`
 <div class="wrapper">
-  <h3><span>${this.t.title}:</span> ${this.title}</h3>
-  <slot></slot>
+  <div class="counter"> ${this.count} </div>
+  <div class ="buttons">
+    <button @click = "${this.decrease}">-1</button>
+    <button @click = "${this.increase}">+1</button>
+    <button @click = "${this.rest}"> Reset</button>
+  </div>
 </div>`;
+  }
+  increase() {
+    this.count++;
+  }
+  decrease() {
+    this.count--;
+  }
+  rest() {
+    this.count = 0;
   }
 
   /**
